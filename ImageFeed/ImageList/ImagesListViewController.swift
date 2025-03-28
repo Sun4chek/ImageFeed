@@ -30,6 +30,8 @@ final class ImagesListViewController: UIViewController {
             return
         }
 
+        
+        
         cell.cellImage.image = image
         cell.dateLabel.text = dateFormatter.string(from: Date())
 
@@ -37,6 +39,14 @@ final class ImagesListViewController: UIViewController {
         let likeImage = isActive ? UIImage(named: "Active") : UIImage(named: "NoActive")
         cell.likeButton.setImage(likeImage, for: .normal)
     }
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 extension ImagesListViewController: UITableViewDataSource {
