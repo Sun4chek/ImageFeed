@@ -33,7 +33,7 @@ final class ProfileViewController: UIViewController {
         view.addSubview(shortNameLabel)
         shortNameLabel.text = "@ekaterina_n"
         shortNameLabel.font = .systemFont(ofSize: 13, weight: .regular)
-        shortNameLabel.textColor = .gray
+        shortNameLabel.textColor = UIColor(red: 174/255.0, green: 175/255.0, blue: 180/255.0, alpha: 1.0)
         shortNameLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
         shortNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8).isActive = true
         

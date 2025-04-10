@@ -17,7 +17,7 @@ final class SingleImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
+        scrollView.maximumZoomScale = 3.0
 
         
         guard let image = image else { return }
@@ -48,7 +48,6 @@ final class SingleImageViewController: UIViewController {
         scrollView.setZoomScale(scale, animated: false)
         scrollView.layoutIfNeeded()
         centerImage()
-        print("Initial zoom scale: \(scrollView.zoomScale)") // Отладка
     }
     
     func centerImage() {
@@ -78,11 +77,9 @@ extension SingleImageViewController: UIScrollViewDelegate {
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         centerImage()
-        print("Zoom scale during zooming: \(scrollView.zoomScale)") // Отладка
     }
     
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
         centerImage()
-        print("Zoom scale after zooming: \(scrollView.zoomScale)") // Отладка
     }
 }
