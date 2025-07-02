@@ -221,14 +221,14 @@
                                     <constraint firstAttribute="width" constant="60" id="58s-v5-YTA"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GPR-pU-qcp">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FjX-tC-2Fc">
                                 <rect key="frame" x="16" y="682" width="382" height="48"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="zAT-Sp-zdL"/>
+                                    <constraint firstAttribute="height" constant="48" id="IXw-fA-lQS"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Войти">
-                                    <fontDescription key="titleFontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="17"/>
+                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="17"/>
                                     <color key="baseForegroundColor" name="ypBlack"/>
                                     <color key="baseBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
@@ -239,21 +239,24 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <segue destination="zCs-OQ-Prl" kind="show" identifier="ShowWebView" id="jVa-ZY-DAr"/>
+                                    <segue destination="zCs-OQ-Prl" kind="show" identifier="ShowWebView" id="hQi-Sm-tse"/>
                                 </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="zc4-4I-CAi"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
-                            <constraint firstItem="zc4-4I-CAi" firstAttribute="trailing" secondItem="GPR-pU-qcp" secondAttribute="trailing" constant="16" id="EJF-AO-M7f"/>
+                            <constraint firstItem="FjX-tC-2Fc" firstAttribute="leading" secondItem="zc4-4I-CAi" secondAttribute="leading" constant="16" id="JeX-5Y-z5d"/>
+                            <constraint firstItem="FjX-tC-2Fc" firstAttribute="top" secondItem="9I1-ib-kqH" secondAttribute="bottom" constant="204" id="SN0-0t-HkM"/>
                             <constraint firstItem="9I1-ib-kqH" firstAttribute="centerX" secondItem="EQl-bX-eAT" secondAttribute="centerX" id="VJ4-Q8-QGq"/>
-                            <constraint firstItem="GPR-pU-qcp" firstAttribute="top" secondItem="9I1-ib-kqH" secondAttribute="bottom" constant="204" id="aqI-zp-6gs"/>
                             <constraint firstItem="9I1-ib-kqH" firstAttribute="centerY" secondItem="EQl-bX-eAT" secondAttribute="centerY" id="e73-Rw-9jw"/>
-                            <constraint firstItem="GPR-pU-qcp" firstAttribute="leading" secondItem="zc4-4I-CAi" secondAttribute="leading" constant="16" id="wfU-Fk-jWP"/>
+                            <constraint firstItem="zc4-4I-CAi" firstAttribute="trailing" secondItem="FjX-tC-2Fc" secondAttribute="trailing" constant="16" id="pgX-Cy-uVb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="zfN-lp-zot"/>
+                    <connections>
+                        <outlet property="loginButton" destination="FjX-tC-2Fc" id="8hG-fC-U7K"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Djo-ht-Y5z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
