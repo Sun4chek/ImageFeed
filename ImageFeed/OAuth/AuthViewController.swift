@@ -25,24 +25,21 @@ final class AuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configButtFont()
+        //configButtFont()
         configureBackButton()
         
     }
     
-//MARK: Functions
-    private func configButtFont(){
-        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-    }
+////MARK: F/Users/alexvolo1998/Desktop/ImageFeed/ImageFeed/OAuthunctions
+//    private func configButtFont(){
+//        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+//    }
     
     private func configureBackButton() {
-//        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button") // 1
+
        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button")
     navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil) // 3
-        
-//        navigationItem.backBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: nil, action: nil)
    navigationItem.backBarButtonItem?.tintColor = UIColor(named: "ypBlack")
-        // 4
     }
     
     
