@@ -17,6 +17,7 @@ final class AuthViewController: UIViewController {
     //MARK: Variables
     private let showWebViewSegueIdentifier = "ShowWebView"
     weak var delegate: AuthViewControllerDelegate?
+    @IBOutlet var loginButton: UIButton!
     
     //MARK: Lifecycles
     override func viewDidLoad() {
