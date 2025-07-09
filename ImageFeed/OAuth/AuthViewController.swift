@@ -14,50 +14,21 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 final class AuthViewController: UIViewController {
     
-//MARK: Variebles
-    let showWebViewSegueIdentifier = "ShowWebView"
+    //MARK: Variables
+    private let showWebViewSegueIdentifier = "ShowWebView"
     weak var delegate: AuthViewControllerDelegate?
-
-    @IBOutlet var loginButton: UIButton!
     
-    
-//MARK: Lifecycles
-    
+    //MARK: Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        //configButtFont()
         configureBackButton()
-        
     }
-    
-////MARK: F/Users/alexvolo1998/Desktop/ImageFeed/ImageFeed/OAuthunctions
-//    private func configButtFont(){
-//        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-//    }
     
     private func configureBackButton() {
-
-       navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button")
-    navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil) // 3
-   navigationItem.backBarButtonItem?.tintColor = UIColor(named: "ypBlack")
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(resource: .navBackButton)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil) // 3
+        navigationItem.backBarButtonItem?.tintColor = UIColor(resource: .ypBlack)
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
         
@@ -75,13 +46,6 @@ final class AuthViewController: UIViewController {
 
 
 extension AuthViewController: WebViewViewControllerDelegate {
-    
-    
-    
-    
-    
-    //MARK: доделать 
-    
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         
@@ -101,7 +65,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        
         vc.dismiss(animated: true)
     }
     

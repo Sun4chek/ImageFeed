@@ -17,42 +17,15 @@ final class OAuth2Service {
     private var tokenStorage = OAuth2TokenStorage()
     
     
-    func makeOAuthTokenRequest(code: String?) -> URLRequest? {
-        
-        let baseURL = URL(string: "https://unsplash.com")!
-        var request = URLRequest(url: baseURL)
-        if let code = code {
-            let url = URL(
-                string: "/oauth/token"
-                + "?client_id=\(Constants.accessKey)"         // Используем знак ?, чтобы начать перечисление параметров запроса
-                + "&&client_secret=\(Constants.secretKey)"    // Используем &&, чтобы добавить дополнительные параметры
-                + "&&redirect_uri=\(Constants.redirectURI)"
-                + "&&code=\(code)"
-                + "&&grant_type=authorization_code",
-                relativeTo: baseURL                           // Опираемся на основной или базовый URL, которые содержат схему и имя хоста
-            )!
-            request.httpMethod = "POST"
-            request = URLRequest(url: url)
-        }
-         return request
-     }
-    
-    
-    
-    
-    //MARK: ДОПИСАТЬ
-    // это вызывается контролерром и тут делается декодирование и сохранение
     func fetchOAuthToken(code : String,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
         let request = makeOAuthTokenRequest(code: code)
         guard let request = request else {
-            print("gbplf ssefsefsefsefsefsefsfsefsefsefsef")
+            print("не получилось сформировать запрос")
             return
         }
-        
         task = URLSession.shared.data(for: request){ [weak self] result in
-            
             switch result {
             case .success(let data):
                 do {
@@ -64,31 +37,39 @@ final class OAuth2Service {
                     completion(.success(token))
                 }
                 catch {
-                    print("траблы с токеном не задекоился")
+                    print("траблы с токеном не задекодился")
                     completion(.failure(error))
                 }
             case .failure(let error):
                 completion(.failure(error))
-                
             }
-            
         }
         task?.resume()
     }
     
+    private func makeOAuthTokenRequest(code: String?) -> URLRequest? {
+        guard let baseURL = URL(string: "https://unsplash.com")else {
+            return nil
+        }
+        var request = URLRequest(url: baseURL)
+        if let code = code {
+            let url = URL(
+                string: "/oauth/token"
+                + "?client_id=\(Constants.accessKey)"
+                + "&&client_secret=\(Constants.secretKey)"
+                + "&&redirect_uri=\(Constants.redirectURI)"
+                + "&&code=\(code)"
+                + "&&grant_type=authorization_code",
+                relativeTo: baseURL
+            )!
+            request.httpMethod = "POST"
+            request = URLRequest(url: url)
+        }
+         return request
+     }
 }
 
 
-
-
-
-
-
-
-
-
-
-//MARK: СДЕЛАТЬ СОХРАНЕНИЕ В ЮЗЕР ДЕФОЛТС
 
 class OAuth2TokenStorage {
     
@@ -102,5 +83,4 @@ class OAuth2TokenStorage {
             print("есть токен")
         }
     }
-    
 }

@@ -24,10 +24,8 @@ final class WebViewViewController: UIViewController {
     
     @IBOutlet var webView: WKWebView!
     @IBOutlet var progressView: UIProgressView!
-    
+
     weak var delegate: WebViewViewControllerDelegate?
-    var adad = OAuth2TokenStorage()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
