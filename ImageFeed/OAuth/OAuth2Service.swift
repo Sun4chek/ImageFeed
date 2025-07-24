@@ -49,7 +49,8 @@ final class OAuth2Service {
         
         let request = makeOAuthTokenRequest(code: code)
         guard let request = request else {
-            print("не получилось сформировать запрос")
+            completion(.failure(OAuth2Error.invalidRequest))
+            print("не получилось сформировать запрос на авторизацию")
             return
         }
         

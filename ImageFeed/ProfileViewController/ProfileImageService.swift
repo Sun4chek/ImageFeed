@@ -46,7 +46,7 @@ final class ProfileImageService {
         guard
             let token = storage.token,
             let request = makerequestFoAvatarURL(username: username,token: token) else {
-            assertionFailure("[ProfileImageService] Failed to create URLRequest")
+            completion(.failure(NSError(domain: "ProfileImageService", code: 401, userInfo: [NSLocalizedDescriptionKey: "Authorization token missing"])))
             return
         }
 

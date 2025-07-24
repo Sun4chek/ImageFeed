@@ -46,6 +46,7 @@ final class ProfileService {
         let request = makePofileRequest(token: token)
         guard let request = request else {
             print("не получилось сформировать запрос")
+            completion(.failure(URLError(.badURL)))
             return
         }
         

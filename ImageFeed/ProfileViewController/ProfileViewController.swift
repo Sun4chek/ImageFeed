@@ -11,7 +11,8 @@ final class ProfileViewController: UIViewController {
         view.backgroundColor = UIColor(named: "ypBlack")
         setupUI()
         nameLabel.text = profileService.profile?.name ?? "Екатерина Новикова"
-        shortNameLabel.text = profileService.profile?.loginName
+        guard let name = profileService.profile?.loginName else {return}
+        shortNameLabel.text = "@\(name)"
         profileText.text = profileService.profile?.bio
         profileImageServiceObserver = NotificationCenter.default    // 2
             .addObserver(
