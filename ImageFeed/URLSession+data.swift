@@ -29,11 +29,14 @@ extension URLSession {
                 if 200 ..< 300 ~= statusCode {
                     fulfillCompletionOnTheMainThread(.success(data)) // 3
                 } else {
+                    print("status code \(statusCode) is not in 200..<300")
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode))) // 4
                 }
             } else if let error = error {
+                print("catch error \(error) in request")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error))) // 5
             } else {
+                print("catch error in URLSession")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError)) // 6
             }
         })

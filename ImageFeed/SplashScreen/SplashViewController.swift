@@ -12,6 +12,7 @@ final class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("вызван вью дид лоуд сплэш контроллера")
+       
         
     }
     
@@ -142,7 +143,7 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .success:
                 self.switchToTabBarController()
             case .failure:
-                showErrorAlert(on: self, title: "Что-то пошло не так", message: "Не удалось загрузить профиль")
+                showErrorAlert(on: self, title: "Что-то пошло не так(", message: "Не удалось войти в систему")
             }
         }
     }
