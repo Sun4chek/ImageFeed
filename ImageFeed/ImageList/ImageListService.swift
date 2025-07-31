@@ -82,20 +82,22 @@ class ImagesListService {
         
         
         
-        task = URLSession.shared.objectTask(for: request, completion: { [weak self] (result: Result<PhotoResult, Error>) in
+        task = URLSession.shared.objectTask(for: request, completion: { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self = self else { return }
             switch result {
                 case .success(let response):
-                    var size = CGSize(width: response.width, height: response.height)
-                    var date = response.createdAt.flatMap{
+                    let newPhotos = response.map{result -> Photo in
+                    let size = CGSize(width: result.width, height: result.height)
+                    let date = result.createdAt.flatMap{
                         self.dateFormatter.date(from: $0) }
-                    let photo = Photo(id: response.id, size: size, createdAt: date, welcomeDescription: response.description, thumbImageURL: response.urls.thumb, largeImageURL: response.urls.full, isLiked: response.likedByUser)
-                
+                    let photo = Photo(id: result.id, size: size, createdAt: date, welcomeDescription: result.description, thumbImageURL: result.urls.thumb, largeImageURL: result.urls.full, isLiked: result.likedByUser
+                    )
+                        return photo
+                    }
                     DispatchQueue.main.async {
-                        self.photos.append(photo)
-                        print("фото добавлены теперь их всего \(self.photos.count)")
                         self.lastLoadedPage = nextPage
-                        NotificationCenter.default.post(name: Self.didChangeNotification, object: nil)
+                        self.photos.append(contentsOf: newPhotos)
+                        NotificationCenter.default.post(name: Self.didChangeNotification , object: nil)
                     }
                 case .failure(let error):
                     print(error)
@@ -104,9 +106,6 @@ class ImagesListService {
         task?.resume()
     }
 
-    
-    
-    
     func makePhotoRequest(page : Int) -> URLRequest?{
         guard let baseUrl = Constants.defaultBaseURL else { return nil }
         let url = URL(
