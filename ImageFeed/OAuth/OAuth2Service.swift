@@ -55,7 +55,7 @@ final class OAuth2Service {
         }
         
         print("запрос для 1 реги готов и передан в таск ")
-        task = URLSession.shared.objectTask(for: request, completion: { [weak self] (result: Result<OAuthTokenBody, Error>) in
+        let task = URLSession.shared.objectTask(for: request, completion: { [weak self] (result: Result<OAuthTokenBody, Error>) in
             switch result {
             case .success(let response):
                 let token = response.accessToken
@@ -68,7 +68,8 @@ final class OAuth2Service {
             self?.task = nil
             self?.lastCode = nil
         })
-        task?.resume()
+        self.task = task
+        task.resume()
     }
         
 

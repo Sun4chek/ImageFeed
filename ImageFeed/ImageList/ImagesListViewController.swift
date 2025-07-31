@@ -27,6 +27,17 @@ final class ImagesListViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     
+    func tableView(_ tableView : UITableView,
+                   willDisplay cell:UITableViewCell,
+                   forRowAt indexPath : IndexPath
+    ){
+        if indexPath.row + 1 == photos.count {
+            fetchPhotosNextPage()
+        }
+    }
+    
+    
+    
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return
