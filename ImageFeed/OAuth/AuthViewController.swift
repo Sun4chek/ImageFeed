@@ -8,6 +8,7 @@
 import UIKit
 
 
+
 protocol AuthViewControllerDelegate: AnyObject {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String)
 }
@@ -50,12 +51,20 @@ extension AuthViewController: WebViewViewControllerDelegate {
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         
+        UIBlockingProgressHUD.show()
+        
+        
         OAuth2Service.shared.fetchOAuthToken(code : code ){ [weak self] result in
+            print(result)
             DispatchQueue.main.async {
+                
+                UIBlockingProgressHUD.dismiss()
+                
                 switch result {
                 case .success:
                     print("получилось авторизоваться")
                     vc.dismiss(animated: true)
+                    
                     guard let self = self else { return }
                     self.delegate?.authViewController(self, didAuthenticateWithCode: code)
                 case .failure(let error):
