@@ -1,5 +1,11 @@
 import UIKit
 
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell : ImagesListCell)
+    
+}
+
+
 
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
@@ -7,6 +13,7 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet var cellImage: UIImageView!
     @IBOutlet var likeButton: UIButton!
     @IBOutlet var dateLabel: UILabel!
+    weak var delegate: ImagesListCellDelegate?
     
     private let gradientView: UIView = {
         let view = UIView()
@@ -44,6 +51,14 @@ final class ImagesListCell: UITableViewCell {
         }
     }
     
+    @IBAction func likeButtonClicked(_ sender: Any) {
+        delegate?.imageListCellDidTapLike(self)
+    }
+    
+    func setIsLiked(_ isLiked : Bool){
+        let likeImage = isLiked ? UIImage(named: "Active") : UIImage(named: "NoActive")
+        likeButton.setImage(likeImage, for: .normal)
+    }
     private func setupGradient() {
         cellImage.addSubview(gradientView)
         // Убедимся, что дата отображается поверх градиента

@@ -56,7 +56,7 @@ final class ProfileImageService {
             case .success(let response):
                 guard let url = response.profileImage.small else { return }
                 self.updateAvatar(url: url)
-                print("avatar image was save????????????????????????????????????????????????????????????")
+                print("\navatar image was save\n")
                 completion(.success(url))
                 NotificationCenter.default                                     // 1
                     .post(                                                     // 2
@@ -87,5 +87,11 @@ final class ProfileImageService {
     
     func updateAvatar(url: String){
         self.avatarURL = url
+    }
+    
+    func reset() {
+        avatarURL = nil
+        task?.cancel()
+        task = nil
     }
 }
