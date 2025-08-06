@@ -20,7 +20,7 @@ final class ProfileLogoutService {
 
         ProfileService.shared.reset()
         ProfileImageService.shared.reset()
-        ImagesListService.shared.reset()
+//        ImagesListService.shared.reset()
 
         switchToSplashViewController()
     }

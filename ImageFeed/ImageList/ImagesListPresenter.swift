@@ -6,74 +6,88 @@
 //
 
 import Foundation
-import UIKit
 
-
-
-
-
-protocol ImagesListPresenterProtocol{
+protocol ImagesListPresenterProtocol: AnyObject {
     var view: ImagesListViewProtocol? { get set }
-    var photos: [Photo] {get set}
+    var photos: [Photo] { get }
     func viewDidLoad()
-    func willDisplayCell(at indexPath: IndexPath)
-    func calculCellHeight(indexPath: IndexPath,tableView: UITableView) -> CGFloat
-    
+    func didScrollToBottom()
+    func didTapLike(at indexPath: IndexPath)
+    func getPhoto(at index: Int) -> Photo?
+    func getPhotosCount() -> Int
+    func updatePhotos()
 }
-final class ImagesListPresenter: ImagesListPresenterProtocol{
-    var photos: [Photo] = []
+
+
+final class ImagesListPresenter: ImagesListPresenterProtocol {
+    weak var view: ImagesListViewProtocol?
+    private let imagesListService = ImagesListService.shared
+    private var imagesListServiceObserver: NSObjectProtocol?
+    private var currentPhotosCount: Int = 0
     
-    private let imageListService : ImagesListService
-    var view : ImagesListViewProtocol?
-    
-    init(imageListService: ImagesListService, view: ImagesListViewProtocol) {
-        self.imageListService = imageListService
-        self.view = view
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    var photos: [Photo] {
+        return imagesListService.photos
     }
     
     func viewDidLoad() {
-        imageListService.fetchPhotosNextPage()
-        observer()
-    }
-    
-    private func observer() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(updateTableViewAnimated),
-            name: ImagesListService.didChangeNotification,
-            object: nil
-        )
-    }
-    
-    @objc private func updateTableViewAnimated() {
-        let oldCount = photos.count
-        let newCount = imageListService.photos.count
-        photos = imageListService.photos
-        if oldCount != newCount {
-            view?.updateTableViewAnimated(oldCount: oldCount, newCount: newCount)
+        imagesListServiceObserver = NotificationCenter.default.addObserver(
+            forName: ImagesListService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.updatePhotos()
         }
-    }
-    
-    func willDisplayCell(at indexPath: IndexPath) {
-        if indexPath.row == photos.count - 1 {
-            imageListService.fetchPhotosNextPage()
+        
+        if !imagesListService.photos.isEmpty {
+            DispatchQueue.main.async { [weak self] in
+                self?.updatePhotos()
+            }
         }
+        
+        imagesListService.fetchPhotosNextPage()
     }
     
-    func calculCellHeight(indexPath: IndexPath,tableView: UITableView) -> CGFloat{
+    func updatePhotos() {
+        let oldCount = currentPhotosCount
+        currentPhotosCount = photos.count
+        view?.updateTableViewAnimated(oldCount: oldCount, newPhotos: photos)
+    }
+    
+    func didScrollToBottom() {
+        imagesListService.fetchPhotosNextPage()
+    }
+    
+    func didTapLike(at indexPath: IndexPath) {
+        guard indexPath.row < photos.count else { return }
         let photo = photos[indexPath.row]
-        let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
-        let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
-        let imageWidth = photo.size.width
-        let scale = imageViewWidth / imageWidth
-        let cellHeight = photo.size.height * scale + imageInsets.top + imageInsets.bottom
-        return cellHeight
+        
+        view?.showLoadingHUD()
+        imagesListService.changeLike(photo.id, isLike: !photo.isLiked) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.view?.hideLoadingHUD()
+                
+                switch result {
+                case .success:
+                    self?.view?.updateLikeStatus(at: indexPath, isLiked: !photo.isLiked)
+                case .failure:
+                    self?.view?.showLikeError()
+                }
+            }
+        }
     }
     
+    func getPhoto(at index: Int) -> Photo? {
+        guard index < photos.count else { return nil }
+        return photos[index]
+    }
     
+    func getPhotosCount() -> Int {
+        return photos.count
+    }
     
+    deinit {
+        if let observer = imagesListServiceObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
 }
