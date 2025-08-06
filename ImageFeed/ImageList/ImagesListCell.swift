@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 protocol ImagesListCellDelegate: AnyObject {
     func imageListCellDidTapLike(_ cell : ImagesListCell)
@@ -35,6 +36,61 @@ final class ImagesListCell: UITableViewCell {
         super.awakeFromNib()
         setupGradient()
     }
+    
+    
+    
+//    
+    func configure(with url: URL,date:String){
+        cellImage.kf.indicatorType = .activity
+        let placeholder = UIImage(named: "placeholder")
+        cellImage.kf.setImage(
+                    with: url,
+                    placeholder: placeholder,
+                    options : [.transition(.fade(0.3))]
+                ) {[weak self] result in
+                    switch result {
+                        case .success:
+                            print("успех на соло картинке")
+                        case .failure:
+                            print("Error downloading image")
+                    }
+                }
+        dateLabel.text = date
+        let likeImage = UIImage(named: "NoActive")
+        likeButton.setImage(likeImage, for: .normal)
+        
+    }
+//
+//    
+//    
+//    
+//    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+//        let photo = photos[indexPath.row]
+//        let url = URL(string: photo.thumbImageURL)
+//        
+//        cell.cellImage.kf.indicatorType = .activity
+//        let placeholder = UIImage(named: "placeholder")
+//        
+//        cell.cellImage.kf.setImage(
+//            with: url,
+//            placeholder: placeholder,
+//            options : [.transition(.fade(0.3))]
+//        ) {[weak self] result in
+//            switch result {
+//                case .success:
+//                    self?.tableView.beginUpdates()
+//                    self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+//                    self?.tableView.endUpdates()
+//                case .failure:
+//                    print("Error downloading image")
+//            }
+//        }
+//        let dateText = photo.createdAt.map { dateFormatter.string(from: $0) } ?? ""
+//        cell.dateLabel.text = dateText
+//        
+//        let likeImage = UIImage(named: "NoActive")
+//        cell.likeButton.setImage(likeImage, for: .normal)
+//    }
     
     override func layoutSubviews() {
         super.layoutSubviews()

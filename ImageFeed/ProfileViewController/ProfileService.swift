@@ -15,7 +15,7 @@ enum ProfileError:Error{
 struct Profile {
     var name : String
     var loginName : String
-    var bio : String?
+    var bio : String
 }
 
 struct ProfileResult: Codable{

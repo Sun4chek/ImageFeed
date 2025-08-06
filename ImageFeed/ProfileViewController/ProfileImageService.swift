@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Kingfisher
+import UIKit
 
 private struct UserResult: Codable {
     enum CodingKeys : String, CodingKey {
@@ -31,6 +33,7 @@ final class ProfileImageService {
     private var task: URLSessionTask?
     private let urlSession = URLSession.shared
     private(set) var avatarURL: String?
+    var avatarImage = UIImage()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
         
     
@@ -58,11 +61,15 @@ final class ProfileImageService {
                 self.updateAvatar(url: url)
                 print("\navatar image was save\n")
                 completion(.success(url))
-                NotificationCenter.default                                     // 1
-                    .post(                                                     // 2
-                        name: ProfileImageService.didChangeNotification,       // 3
-                        object: self,                                          // 4
+                NotificationCenter.default
+                    .post(
+                        name: ProfileImageService.didChangeNotification,
+                        object: self,
                         userInfo: ["URL": url])
+                Task { @MainActor in
+                    self.profileImage()}
+
+                
             case .failure(let error):
                 print("can't fetch avatar")
                 completion(.failure(error))
@@ -71,6 +78,37 @@ final class ProfileImageService {
         })
         task?.resume()
     }
+    
+    @MainActor  func profileImage(){
+        let placeholderImage = UIImage(systemName: "person.circle.fill")?
+            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
+        
+
+            let processor = RoundCornerImageProcessor(cornerRadius: 25)
+            let rect = CGRect(x: 0, y: 0, width: 350, height: 400)
+            let imageView = UIImageView(frame: rect)
+            imageView.clipsToBounds = true
+            guard let avatarURL = avatarURL, let imageUrl = URL(string: avatarURL) else { return }
+            KingfisherManager.shared.cache.clearMemoryCache()
+            KingfisherManager.shared.cache.clearDiskCache()
+            imageView.kf.setImage(with: imageUrl,
+                                  placeholder: placeholderImage,
+                                  options: [.processor(processor)]) { result in
+                switch result {
+                case .success(let value):
+                    self.avatarImage = value.image
+                    print(value.image)
+                    print(value.cacheType)
+                    print(value.source)
+                    
+                case .failure(let error):
+                    print(error)
+                    
+                }
+            }
+        }
+    
     
     func makerequestFoAvatarURL(username : String, token: String) -> URLRequest?{
         
