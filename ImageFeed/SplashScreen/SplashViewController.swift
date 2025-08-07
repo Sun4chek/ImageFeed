@@ -76,11 +76,11 @@ final class SplashViewController: UIViewController {
             print("мы здесь уже ")
             switch result {
                 case .success(let profile):
-                    print("\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\nпопали в у спех в запросе профиля в сплэш дальше идет запрос картинки\n")
+                    print("n\nпопали в у спех в запросе профиля в сплэш дальше идет запрос картинки\n")
                     ProfileImageService.shared.fetchProfileImageURL(profile.loginName){ [weak self] result in
                         switch result {
                             case .success(let url):
-                            print("Получили картинку !!!!!!!!!!!!!!!!!!!!!!!!!")
+                            print("\nПолучили картинку \n")
                         case .failure(let error):
                             print(error)
                         }
