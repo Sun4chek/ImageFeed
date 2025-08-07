@@ -20,10 +20,12 @@ final class AuthViewController: UIViewController {
     weak var delegate: AuthViewControllerDelegate?
     @IBOutlet var loginButton: UIButton!
     
+    
     //MARK: Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackButton()
+        loginButton.accessibilityIdentifier = "Authenticate"
     }
     
     private func configureBackButton() {
@@ -39,6 +41,10 @@ final class AuthViewController: UIViewController {
                 assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
                 return
             }
+            let authHelper = AuthHelper()
+            let presenter = WebViewPresenter(authHelper: authHelper)
+            webViewViewController.presenter = presenter
+            presenter.view = webViewViewController
             webViewViewController.delegate = self
         }
     }

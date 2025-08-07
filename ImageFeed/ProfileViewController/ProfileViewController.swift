@@ -1,30 +1,55 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter : ProfilePresenterProtocol? { get }
     
-    private let profileService = ProfileService.shared
+    func updateUI(name: String ,loginName: String, bio: String, avatar : UIImage?)
+    func exitComfirm()
+}
+
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
+
     private var profileImageServiceObserver: NSObjectProtocol?
+    var presenter : ProfilePresenterProtocol?
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter?.viewDidLoad()
         view.backgroundColor = UIColor(named: "ypBlack")
         setupUI()
-        nameLabel.text = profileService.profile?.name ?? "Екатерина Новикова"
-        guard let name = profileService.profile?.loginName else {return}
-        shortNameLabel.text = "@\(name)"
-        profileText.text = profileService.profile?.bio
-        profileImageServiceObserver = NotificationCenter.default    // 2
+        
+        
+        
+
+        profileImageServiceObserver = NotificationCenter.default
             .addObserver(
-                forName: ProfileImageService.didChangeNotification, // 3
-                object: nil,                                        // 4
-                queue: .main                                        // 5
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
             ) { [weak self] _ in
                 guard let self = self else { return }
-                self.updateAvatar()                                 // 6
+                self.updateAvatar()
             }
         updateAvatar()
     }
+    
+    func updateUI(name: String ,loginName: String, bio: String, avatar : UIImage?){
+        nameLabel.text = name
+        shortNameLabel.text = "@\(loginName)"
+        profileText.text = bio
+        avatarImageView.image = avatar
+    }
+    
+    
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+    }
+    
     
     private func updateAvatar() {                                   // 8
             guard
@@ -33,34 +58,10 @@ final class ProfileViewController: UIViewController {
             else { return }
         print("imageUrl: \(url)")
 
-        let placeholderImage = UIImage(systemName: "person.circle.fill")?
-            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
-            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
-
-        let processor = RoundCornerImageProcessor(cornerRadius: 35) // Радиус для круга
-        avatarImageView.kf.indicatorType = .activity
-        avatarImageView.kf.setImage(
-            with: url,
-            placeholder: placeholderImage,
-            options: [
-                .processor(processor),
-                .scaleFactor(UIScreen.main.scale), // Учитываем масштаб экрана
-                .cacheOriginalImage, // Кэшируем оригинал
-                .forceRefresh // Игнорируем кэш, чтобы обновить
-            ]) { result in
-
-                switch result {
-                case .success(let value):
-                    print(value.image)
-                    print(value.cacheType)
-                    print(value.source)
-                case .failure(let error):
-                    print(error)
-                }
-            }
+        
         }
     
-    private lazy var avatarImageView: UIImageView = {
+    lazy var avatarImageView: UIImageView = {
         let avatarImage = UIImage(resource: .photo)
         let imageView = UIImageView()
         imageView.image = avatarImage
@@ -70,7 +71,7 @@ final class ProfileViewController: UIViewController {
         return imageView
     }()
     
-    private lazy var nameLabel : UILabel! = {
+    lazy var nameLabel : UILabel! = {
         let nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.text = "Екатерина Новикова"
@@ -79,7 +80,7 @@ final class ProfileViewController: UIViewController {
         return nameLabel
     }()
         
-    private lazy var shortNameLabel : UILabel! = {
+    lazy var shortNameLabel : UILabel! = {
         let shortNameLabel = UILabel()
         shortNameLabel.translatesAutoresizingMaskIntoConstraints = false
         shortNameLabel.text = "@ekaterina_n"
@@ -88,7 +89,7 @@ final class ProfileViewController: UIViewController {
         return shortNameLabel
     }()
     
-    private lazy var profileText : UILabel! = {
+    lazy var profileText : UILabel! = {
         let profileText = UILabel()
         profileText.text = "Hello world!"
         profileText.textColor = .white
@@ -97,7 +98,7 @@ final class ProfileViewController: UIViewController {
         return profileText
     }()
     
-    private lazy var logOutButton : UIButton! = {
+    private lazy var logOutButton: UIButton! = {
         let logOutButton = UIButton(type: .custom)
         if let customImage = UIImage(named: "Exit")?.withRenderingMode(.alwaysOriginal) {
             logOutButton.setImage(customImage, for: .normal)
@@ -134,10 +135,16 @@ final class ProfileViewController: UIViewController {
         ])
     }
     @objc
-    private func didTapButton() {
+    func didTapButton() {
+            self.presenter?.didTapExitBtn()
+    }
+    
+    func exitComfirm(){
         let alert = UIAlertController(title: "Пока, пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
         let okBtn = UIAlertAction(title: "Да", style: .default) { _ in
-            ProfileLogoutService.shared.logout()
+        let profileLogoutService = ProfileLogoutService.shared
+        profileLogoutService.logout()
+            
         }
         
         let cancelBtn = UIAlertAction(title: "Нет", style: .cancel)
@@ -146,7 +153,6 @@ final class ProfileViewController: UIViewController {
  
         
         present(alert, animated: true)
-
     }
     
 }
