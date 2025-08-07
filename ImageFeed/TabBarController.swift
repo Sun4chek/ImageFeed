@@ -19,6 +19,7 @@ final class TabBarController: UITabBarController {
             selectedImage: nil
         )
         
+        
         // Configure ImagesListViewController with presenter BEFORE setting viewControllers
         if let imagesListVC = imagesListViewController as? ImagesListViewController {
             let imagesListPresenter = ImagesListPresenter()

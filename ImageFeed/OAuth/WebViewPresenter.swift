@@ -24,7 +24,8 @@ protocol WebViewPresenterProtocol {
 
 final class WebViewPresenter : WebViewPresenterProtocol {
     func code(from url: URL) -> String? {
-        authHelper.code(from: url)
+        print("теперь тут   func code(from url: URL) -> String? ")
+        return authHelper.code(from: url)
     }
     
     

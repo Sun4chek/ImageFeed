@@ -98,7 +98,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         return profileText
     }()
     
-    private lazy var logOutButton : UIButton! = {
+    private lazy var logOutButton: UIButton! = {
         let logOutButton = UIButton(type: .custom)
         if let customImage = UIImage(named: "Exit")?.withRenderingMode(.alwaysOriginal) {
             logOutButton.setImage(customImage, for: .normal)

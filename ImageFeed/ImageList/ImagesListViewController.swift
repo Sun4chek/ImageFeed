@@ -14,7 +14,7 @@ protocol ImagesListViewProtocol: AnyObject {
 
 final class ImagesListViewController: UIViewController, ImagesListViewProtocol {
     
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     var photos: [Photo] = []
     var presenter: ImagesListPresenterProtocol?

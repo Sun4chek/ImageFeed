@@ -97,6 +97,7 @@ final class SplashViewController: UIViewController {
     
     
     private func switchToTabBarController() {
+        print("меня так то вызвали  switchToTabBarController\n\n\n\n")
         guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: "TabBarController")

@@ -20,10 +20,12 @@ final class AuthViewController: UIViewController {
     weak var delegate: AuthViewControllerDelegate?
     @IBOutlet var loginButton: UIButton!
     
+    
     //MARK: Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackButton()
+        loginButton.accessibilityIdentifier = "Authenticate"
     }
     
     private func configureBackButton() {
